@@ -38,9 +38,9 @@ public class FirestoreManager : MonoBehaviour
 
         Dictionary<string, object> data = new Dictionary<string, object>()
         {
-            { "username", "Angel" },
-            { "score", 1500 },
-            { "level", 3 },
+            { "username", "Angely" },
+            { "score", 15000 },
+            { "level", 9 },
             { "online", true }
         };
 

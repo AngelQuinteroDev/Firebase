@@ -67,5 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Firebase.slnx"
+    "dotnet.defaultSolution": "Firebase.slnx",
+    "dotnet.preferCSharpExtension": true
 }

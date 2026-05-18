@@ -2,22 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Gestiona toda la UI del minijuego.
-/// Requiere TextMeshPro (ya incluido en Unity 6).
-///
-/// Jerarquía de Canvas sugerida:
-///   Canvas
-///   ├── HUD (Panel)
-///   │   ├── TimerText   (TMP)   → ej. "00:45"
-///   │   └── MessageText (TMP)   → ej. "¡Llega a la salida!"
-///   ├── WinPanel  (Panel)  → desactivado al inicio
-///   │   ├── TitleText  (TMP)
-///   │   └── RestartButton
-///   └── LosePanel (Panel) → desactivado al inicio
-///       ├── TitleText  (TMP)
-///       └── RestartButton
-/// </summary>
 public class UIManager : MonoBehaviour
 {
     [Header("HUD")]
@@ -60,17 +44,18 @@ public class UIManager : MonoBehaviour
     // ── Llamado por GameManager.onPlayerWin ───────────────────────────────────
     public void ShowWin()
     {
-        if (winPanel  != null) winPanel .SetActive(true);
-        if (messageText != null) messageText.text = "¡Meta alcanzada!";
+        // En lugar de mostrar el panel con botones, damos feedback de carga
+        if (winPanel != null) winPanel.SetActive(false);
+        if (messageText != null) messageText.text = "¡Meta alcanzada!\n\nCalculando puntuación...";
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
     }
 
-    // ── Llamado por GameManager.onPlayerLose ──────────────────────────────────
     public void ShowLose()
     {
-        if (losePanel != null) losePanel.SetActive(true);
-        if (messageText != null) messageText.text = "Tiempo agotado...";
+        // En lugar de mostrar el panel con botones, damos feedback de carga
+        if (losePanel != null) losePanel.SetActive(false);
+        if (messageText != null) messageText.text = "Tiempo agotado...\n\nCalculando puntuación...";
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
     }

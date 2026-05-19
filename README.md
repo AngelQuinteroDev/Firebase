@@ -63,6 +63,15 @@ Guarda toda la información analítica de cada sesión.
 
 Guarda:
 - Nombre del jugador
+- Colisiones
+- Promedio del tiempo de decisión
+- Duración
+- Eficiencia de ruta
+- Cantidad de veces que se pausa
+- Tiempo restante
+- Id de la sesión
+- Fecha de juego
+- Turnos incorrectos
 - Puntaje final
 
 ---
@@ -84,17 +93,27 @@ El dashboard permite visualizar:
 - Distribución de puntajes.
 - Comparación de tiempos.
 - Caminos incorrectos por sesión.
+  
+## Acceso al Dashboard
 
-El link para entrar a la página web del dashboard es: https://dashboard-web-flax-pi.vercel.app/ 
-Además para información adicional sobre la realización y funcionamiento del dashboard, puede ingresar a este repositorio: https://github.com/AngelQuinteroDev/Dashboard-Web
+Puede acceder al dashboard web desde el siguiente enlace:
+
+https://dashboard-web-flax-pi.vercel.app/
+
 ---
+
+## Repositorio del Dashboard
+
+Para información adicional sobre el desarrollo, implementación y funcionamiento técnico del dashboard, puede consultar el repositorio del proyecto:
+
+https://github.com/AngelQuinteroDev/Dashboard-Web
 
 # Documentación
 
 ## Informe Técnico
 Para leer el informe completo del proceso y análisis del proyecto:
 
-➡️ [Ver INFORME.md](./INFORME.md)
+[Ver INFORME.md](./INFORME.md)
 
 ---
 

@@ -123,4 +123,4 @@ Para leer el informe completo del proceso y análisis del proyecto:
 
 Link del video de funcionamiento:
 
-(https://youtu.be/RQaGB8oqzkU)
+https://youtu.be/RQaGB8oqzkU

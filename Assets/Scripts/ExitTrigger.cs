@@ -4,8 +4,8 @@ public class ExitTrigger : MonoBehaviour
 {
     [SerializeField] private string playerTag = "Player";
 
-    [Header("Efecto visual opcional")]
-    [SerializeField] private GameObject exitVFX;   // partícula o luz (opcional)
+    [Header("Optional VFX")]
+    [SerializeField] private GameObject exitVFX;
 
     private void Start()
     {

@@ -3,7 +3,7 @@ using TMPro;
 
 public class DashboardManager : MonoBehaviour
 {
-    [Header("UI Elements")]
+    [Header("UI")]
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private TMP_Text scoreText;
@@ -11,52 +11,48 @@ public class DashboardManager : MonoBehaviour
 
     private async void Start()
     {
-        // Cursor visible por si acaso
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Recuperar datos de PlayerPrefs
-        string playerName = PlayerPrefs.GetString("PlayerName", "Anonimo");
-        int lastScore = PlayerPrefs.GetInt("LastScore", 0);
-        string status = PlayerPrefs.GetString("LastStatus", "");
+        string playerName = PlayerPrefs.GetString(AppConstants.PlayerNameKey, AppConstants.DefaultPlayerName);
+        int lastScore = PlayerPrefs.GetInt(AppConstants.LastScoreKey, 0);
+        string status = PlayerPrefs.GetString(AppConstants.LastStatusKey, "");
 
-        nameText.text = $"Jugador: {playerName}";
-        statusText.text = $"Estado de última partida: {status}";
-        scoreText.text = $"Puntaje: {lastScore}";
-        rankText.text = "Calculando ranking temporal...";
+        nameText.text = $"Player: {playerName}";
+        statusText.text = $"Last result: {status}";
+        scoreText.text = $"Score: {lastScore}";
+        rankText.text = "Calculating rank...";
 
-        // Obtener el ranking global en Highscores desde Firestore
         if (FirestoreManager.Instance != null)
         {
             int rank = await FirestoreManager.Instance.GetPlayerRank(playerName, lastScore);
             if (rank > 0)
             {
-                rankText.text = $"Ranking global: #{rank}";
+                rankText.text = $"Global rank: #{rank}";
             }
             else
             {
-                rankText.text = "No se pudo calcular el ranking";
+                rankText.text = "Rank unavailable";
             }
         }
         else
         {
-            rankText.text = "Servidor desconectado";
+            rankText.text = "Server not ready";
         }
     }
 
     public void ViewWebDashboard()
     {
-        // Reemplazar con el link de tu Dashboard Web real
-        Application.OpenURL("https://tu-dashboard-web.com");
+        Application.OpenURL("https://dashboard-web-flax-pi.vercel.app/");
     }
 
     public void PlayAgain()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(AppConstants.SceneGame);
     }
 
     public void BackToMenu()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(AppConstants.SceneMenu);
     }
 }

@@ -1,22 +1,12 @@
 using UnityEngine;
-
-/// <summary>
-/// Cámara que sigue al jugador suavemente.
-/// Soporta dos modos: Third Person y Top-Down (cenital).
-///
-/// Uso:
-///  1. Adjunta este script a tu Main Camera.
-///  2. Asigna el Transform del jugador en el Inspector.
-///  3. Elige el modo en el enum CameraMode.
-/// </summary>
 public class MazeCamera : MonoBehaviour
 {
     public enum CameraMode { ThirdPerson, TopDown }
 
-    [Header("Objetivo")]
+    [Header("Target")]
     [SerializeField] private Transform target;
 
-    [Header("Modo")]
+    [Header("Mode")]
     [SerializeField] private CameraMode mode = CameraMode.ThirdPerson;
 
     [Header("Third Person")]

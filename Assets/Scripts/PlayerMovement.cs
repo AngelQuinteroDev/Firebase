@@ -4,38 +4,38 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movimiento")]
-    [SerializeField] private float moveSpeed     = 5f;
+    [Header("Movement")]
+    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 720f;
 
-    [Header("Gravedad")]
+    [Header("Gravity")]
     [SerializeField] private float gravity = -20f;
 
-    private CharacterController _cc;
-    private Vector3 _velocity;
+    private CharacterController characterController;
+    private Vector3 velocity;
 
     [Header("Analytics")]
-    [SerializeField] private float directionChangeThreshold = 45f;
-    [SerializeField] private float collisionCooldown = 0.25f;
+    [SerializeField] private float wrongTurnAngleThreshold = 45f;
+    [SerializeField] private float collisionCooldownSeconds = 0.25f;
     [SerializeField] private string[] collisionTags = new string[] { "Wall" };
 
     private bool wasMoving = false;
-    private bool hasLastDecisionDir = false;
-    private Vector3 lastDecisionDir = Vector3.forward;
+    private bool hasLastDecisionDirection = false;
+    private Vector3 lastDecisionDirection = Vector3.forward;
     private float lastCollisionTime = -999f;
 
     private void Awake()
     {
-        _cc = GetComponent<CharacterController>();
+        characterController = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
         if (GameManager.Instance == null || !GameManager.Instance.IsPlaying) return;
-        HandleMovement();
+        UpdateMovement();
     }
 
-    private void HandleMovement()
+    private void UpdateMovement()
     {
         Vector2 input = Vector2.zero;
 
@@ -54,31 +54,26 @@ public class PlayerController : MonoBehaviour
 
         input = Vector2.ClampMagnitude(input, 1f);
 
-        Vector3 moveDir = new Vector3(input.x, 0f, input.y);
-
-        // --- TRACKING DE ANALÍTICAS ---
-        bool isMoving = moveDir.sqrMagnitude > 0.01f;
+        Vector3 moveDirection = new Vector3(input.x, 0f, input.y);
+        bool isMoving = moveDirection.sqrMagnitude > 0.01f;
         
         if (AnalyticsManager.Instance != null && AnalyticsManager.Instance.currentSession != null)
         {
             if (isMoving)
             {
-                float dist = moveDir.magnitude * moveSpeed * Time.deltaTime;
-                AnalyticsManager.Instance.AddDistance(dist);
-
-                Vector3 normalizedDir = moveDir.normalized;
-                if (hasLastDecisionDir)
+                Vector3 normalizedDirection = moveDirection.normalized;
+                if (hasLastDecisionDirection)
                 {
-                    if (Vector3.Angle(lastDecisionDir, normalizedDir) > directionChangeThreshold)
+                    if (Vector3.Angle(lastDecisionDirection, normalizedDirection) > wrongTurnAngleThreshold)
                     {
-                        AnalyticsManager.Instance.AddDirectionChange();
-                        lastDecisionDir = normalizedDir;
+                        AnalyticsManager.Instance.RegisterWrongTurn();
+                        lastDecisionDirection = normalizedDirection;
                     }
                 }
                 else
                 {
-                    lastDecisionDir = normalizedDir;
-                    hasLastDecisionDir = true;
+                    lastDecisionDirection = normalizedDirection;
+                    hasLastDecisionDirection = true;
                 }
             }
             else
@@ -88,23 +83,21 @@ public class PlayerController : MonoBehaviour
 
             if (wasMoving && !isMoving)
             {
-                AnalyticsManager.Instance.AddStop();
+                AnalyticsManager.Instance.RegisterPause();
             }
         }
         
         wasMoving = isMoving;
-        // ------------------------------
 
-        if (_cc.isGrounded && _velocity.y < 0f) _velocity.y = -2f;
-        _velocity.y += gravity * Time.deltaTime;
+        if (characterController.isGrounded && velocity.y < 0f) velocity.y = -2f;
+        velocity.y += gravity * Time.deltaTime;
 
-        _cc.Move((moveDir * moveSpeed + Vector3.up * _velocity.y) * Time.deltaTime);
+        characterController.Move((moveDirection * moveSpeed + Vector3.up * velocity.y) * Time.deltaTime);
 
         if (isMoving)
         {
-            Quaternion targetRot = Quaternion.LookRotation(moveDir);
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
 
@@ -112,9 +105,9 @@ public class PlayerController : MonoBehaviour
     {
         if (Mathf.Abs(hit.normal.y) < 0.1f && IsCollisionTag(hit.gameObject))
         {
-            if (wasMoving && AnalyticsManager.Instance != null && _cc.velocity.magnitude > 0.1f)
+            if (wasMoving && AnalyticsManager.Instance != null && characterController.velocity.magnitude > 0.1f)
             {
-                RegisterWallCollision();
+                RegisterCollision();
             }
         }
     }
@@ -123,15 +116,15 @@ public class PlayerController : MonoBehaviour
     {
         if (IsCollisionTag(other.gameObject))
         {
-            RegisterWallCollision();
+            RegisterCollision();
         }
     }
 
-    private void RegisterWallCollision()
+    private void RegisterCollision()
     {
-        if (Time.time - lastCollisionTime < collisionCooldown) return;
+        if (Time.time - lastCollisionTime < collisionCooldownSeconds) return;
         lastCollisionTime = Time.time;
-        AnalyticsManager.Instance?.AddWallCollision();
+        AnalyticsManager.Instance?.RegisterCollision();
     }
 
     private bool IsCollisionTag(GameObject obj)

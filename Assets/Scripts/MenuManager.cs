@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -10,17 +9,15 @@ public class MenuManager : MonoBehaviour
     public void PlayGame()
     {
         string rawName = nameInput != null ? nameInput.text : string.Empty;
-        string playerName = string.IsNullOrWhiteSpace(rawName) ? "Jugador_Anonimo" : rawName.Trim();
+        string playerName = string.IsNullOrWhiteSpace(rawName) ? AppConstants.DefaultPlayerName : rawName.Trim();
 
         EnsurePlayerSession(playerName);
         AnalyticsManager.PendingPlayerName = playerName;
         
-        // Guardar nombre transversalmente en PlayerPrefs
-        PlayerPrefs.SetString("PlayerName", playerName);
+        PlayerPrefs.SetString(AppConstants.PlayerNameKey, playerName);
         PlayerPrefs.Save();
         
-        // Cargar escena de juego
-        SceneManager.LoadScene("Game"); 
+        SceneManager.LoadScene(AppConstants.SceneGame); 
     }
 
     private void EnsurePlayerSession(string playerName)

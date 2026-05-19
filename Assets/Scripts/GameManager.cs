@@ -1,32 +1,21 @@
 using UnityEngine;
 using UnityEngine.Events;
-
-/// <summary>
-/// Singleton que gestiona el estado global del minijuego:
-/// temporizador, victoria y derrota.
-/// Coloca este script en un GameObject vacío llamado "GameManager".
-/// </summary>
 public class GameManager : MonoBehaviour
 {
-    // ── Singleton ────────────────────────────────────────────────────────────
     public static GameManager Instance { get; private set; }
 
-    // ── Inspector ─────────────────────────────────────────────────────────────
-    [Header("Tiempo")]
-    [SerializeField] private float timeLimit = 60f;   // segundos por nivel
+    [Header("Timer")]
+    [SerializeField] private float timeLimit = 60f;
 
-    [Header("Eventos (arrastra objetos de UI aquí)")]
+    [Header("Events")]
     public UnityEvent onGameStart;
     public UnityEvent onPlayerWin;
     public UnityEvent onPlayerLose;
-    public UnityEvent<float> onTimerUpdate;   // envía tiempo restante
+    public UnityEvent<float> onTimerUpdate;
 
-    // ── Estado ────────────────────────────────────────────────────────────────
-    public bool  IsPlaying    { get; private set; }
-    public float TimeLeft     { get; private set; }
-    public bool  GameFinished { get; private set; }
-
-    // ── Unity ─────────────────────────────────────────────────────────────────
+    public bool IsPlaying { get; private set; }
+    public float TimeLeft { get; private set; }
+    public bool GameFinished { get; private set; }
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -52,9 +41,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ── API pública ───────────────────────────────────────────────────────────
-
-    /// <summary>Inicia o reinicia el juego.</summary>
     public void StartGame()
     {
         TimeLeft     = timeLimit;
@@ -63,27 +49,24 @@ public class GameManager : MonoBehaviour
         onGameStart?.Invoke();
     }
 
-    /// <summary>Llamado por ExitTrigger cuando el jugador llega a la meta.</summary>
     public void TriggerWin()
     {
         if (GameFinished) return;
         GameFinished = true;
         IsPlaying    = false;
-        Debug.Log("[GameManager] ¡Victoria!");
+        Debug.Log("[GameManager] Victory");
         onPlayerWin?.Invoke();
     }
 
-    /// <summary>Llamado internamente cuando el tiempo se agota.</summary>
     public void TriggerLose()
     {
         if (GameFinished) return;
         GameFinished = true;
         IsPlaying    = false;
-        Debug.Log("[GameManager] Tiempo agotado — derrota.");
+        Debug.Log("[GameManager] Time up - lose");
         onPlayerLose?.Invoke();
     }
 
-    /// <summary>Reinicia la escena actual.</summary>
     public void RestartGame()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(

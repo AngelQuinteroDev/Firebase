@@ -19,12 +19,11 @@ public class FirestoreManager : MonoBehaviour
             return; 
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Persiste a través de las escenas
+        DontDestroyOnLoad(gameObject);
     }
 
     async void Start()
     {
-        // Verificar dependencias Firebase
         DependencyStatus status = await FirebaseApp.CheckAndFixDependenciesAsync();
 
         if (status == DependencyStatus.Available)
@@ -47,36 +46,32 @@ public class FirestoreManager : MonoBehaviour
             return;
         }
 
-        // Ensure playerName is usable for document IDs
         string rawPlayerName = sessionData.playerName;
         if (string.IsNullOrWhiteSpace(rawPlayerName))
         {
-            rawPlayerName = "Jugador_Anonimo";
+            rawPlayerName = AppConstants.DefaultPlayerName;
         }
         rawPlayerName = rawPlayerName.Trim();
         if (string.IsNullOrWhiteSpace(rawPlayerName))
         {
-            rawPlayerName = "Jugador_Anonimo";
+            rawPlayerName = AppConstants.DefaultPlayerName;
         }
         sessionData.playerName = rawPlayerName;
         string safePlayerDocId = rawPlayerName.Replace("/", "_");
 
         if (!isReady || db == null)
         {
-            Debug.LogError("Firestore no está listo para enviar datos.");
+            Debug.LogError("Firestore is not ready.");
             return;
         }
 
         try
         {
-            // 1. Guardar la sesión con ID único automático
-            DocumentReference sessionRef = db.Collection("sessions").Document(); // Document() sin params genera un ID único
+            DocumentReference sessionRef = db.Collection("sessions").Document();
             sessionData.sessionId = sessionRef.Id;
             await sessionRef.SetAsync(sessionData);
-            Debug.Log($"Sesión guardada en Firestore con ID: {sessionRef.Id}");
+            Debug.Log($"Session saved with ID: {sessionRef.Id}");
 
-            // 2. Guardar/Actualizar el Highscore
-            // highscores/{playerName}
             DocumentReference highscoreRef = db.Collection("highscores").Document(safePlayerDocId);
             DocumentSnapshot snapshot = await highscoreRef.GetSnapshotAsync();
 
@@ -86,7 +81,6 @@ public class FirestoreManager : MonoBehaviour
                 currentHighscore = existingScore;
             }
 
-            // Si el nuevo score es mayor, o si no existía, lo actualizamos
             if (sessionData.finalScore > currentHighscore)
             {
                 Dictionary<string, object> highscoreDict = new Dictionary<string, object>
@@ -94,15 +88,14 @@ public class FirestoreManager : MonoBehaviour
                     { "playerName", sessionData.playerName },
                     { "score", sessionData.finalScore }
                 };
-                
-                // Merge para actualizar o crear sin borrar otros campos accidentales si hubieran futuros
+
                 await highscoreRef.SetAsync(highscoreDict, SetOptions.MergeAll);
-                Debug.Log($"Highscore actualizado para {sessionData.playerName}: {sessionData.finalScore}");
+                Debug.Log($"Highscore updated for {sessionData.playerName}: {sessionData.finalScore}");
             }
         }
         catch (System.Exception ex)
         {
-            Debug.LogError($"Error guardando datos en Firestore: {ex.Message}");
+            Debug.LogError($"Error saving to Firestore: {ex.Message}");
         }
     }
 
@@ -117,7 +110,7 @@ public class FirestoreManager : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            Debug.LogError("Error obteniendo ranking: " + ex.Message);
+            Debug.LogError("Error getting rank: " + ex.Message);
             return -1;
         }
     }

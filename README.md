@@ -57,11 +57,7 @@ Cuando la partida termina:
 
 ## Colección `sessions`
 
-Guarda toda la información analítica de cada sesión.
-
-## Colección `highscores`
-
-Guarda:
+Guarda toda la información analítica de cada sesión:
 - Nombre del jugador
 - Colisiones
 - Promedio del tiempo de decisión
@@ -72,6 +68,12 @@ Guarda:
 - Id de la sesión
 - Fecha de juego
 - Turnos incorrectos
+- Puntaje final
+
+## Colección `highscores`
+
+Guarda:
+- Nombre del jugador
 - Puntaje final
 
 ---

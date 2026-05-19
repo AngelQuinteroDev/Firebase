@@ -47,12 +47,8 @@ Durante las pruebas vimos diferencias muy grandes entre sesiones, lo que confirm
 
 ---
 
-## Caminos incorrectos
-
-Después agregamos una métrica para contar cuántas veces el jugador entraba en rutas equivocadas o callejones sin salida.
-
-Esta métrica apareció porque observamos que algunos jugadores avanzaban rápido, pero otros recorrían muchas zonas innecesarias. Gracias a esto pudimos detectar partes del mapa que resultaban confusas.
-
+## Cuenta de pausa
+Después agregamos una métrica para determinar cuantas veces un jugador pausa el tiempo. Esto es importante para determinar el comportamiento de los jugadores
 ---
 
 ## Colisiones con paredes u obstáculos

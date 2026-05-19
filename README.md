@@ -4,8 +4,8 @@ Proyecto desarrollado en Unity utilizando Firebase Firestore para la recolecció
 
 ## Integrantes
 
-- Nombre integrante 1
-- Nombre integrante 2
+- Angel Gabriel Quintero Morales
+- Angely Parra Vallejo
 
 ---
 

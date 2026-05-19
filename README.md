@@ -86,6 +86,7 @@ El dashboard permite visualizar:
 - Caminos incorrectos por sesión.
 
 El link para entrar a la página web del dashboard es: https://dashboard-web-flax-pi.vercel.app/
+
 Además para información adicional sobre la realización y funcionamiento del dashboard, puede ingresar a este repositorio: https://github.com/AngelQuinteroDev/Dashboard-Web
 ---
 
